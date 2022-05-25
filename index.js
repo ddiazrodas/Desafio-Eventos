@@ -92,11 +92,12 @@ formulario.addEventListener("submit", (e) => {
 
 const filtroDeEdades = (edades) => {
     let resultadoFiltroEmpleados;
-    if (edades === 'mayores') {
-        resultadoFiltroEmpleados = empleados.filter((i) => i.edad > 30);
-    } else {
-        resultadoFiltroEmpleados = empleados.filter((i) => i.edad <= 30);
-    }
+    // if (edades === 'mayores') {
+    //     resultadoFiltroEmpleados = empleados.filter((i) => i.edad > 30);
+    // } else {
+    //     resultadoFiltroEmpleados = empleados.filter((i) => i.edad <= 30);
+    // }
+    edades === 'mayores' ? resultadoFiltroEmpleados = empleados.filter((i) => i.edad > 30) : resultadoFiltroEmpleados = empleados.filter((i) => i.edad <= 30);
 
     return resultadoFiltroEmpleados;
 };
