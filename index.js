@@ -12,6 +12,32 @@ let valorHoraEmp = document.getElementById("valorHoraEmp");
 let divMen30 = document.getElementById("divMen30");
 let btnMen30 = document.getElementById("btnMen30");
 let btnMay30 = document.getElementById("btnMay30");
+let bestEmployees;
+
+const traerDatosJson = async () => {
+  let response = await fetch("./bestEmployees.json");
+  let data = await response.json();
+  bestEmployees = data;
+};
+
+traerDatosJson();
+
+const mostrarBestEmployees = () => {
+  tablaEmpleados.innerHTML = "";
+
+  for (let index = 0; index < bestEmployees.length; index++) {
+    tablaEmpleados.innerHTML += `<tr>
+          <th class="guionCentrado" scope="row">${bestEmployees[index].id}</th>
+          <td class="guionCentrado">${bestEmployees[index].nombre}</td>
+          <td class="guionCentrado">${bestEmployees[index].apellido}</td>
+          <td class="guionCentrado">${bestEmployees[index].edad}</td>
+          <td class="guionCentrado">${bestEmployees[index].seniority}</td>
+          <td class="guionCentrado">-</td>
+          <td class="guionCentrado">${bestEmployees[index].mes}</td>
+      </tr>
+      `;
+  }
+};
 
 navbar.innerHTML = `<nav class="navbar navbar-expand-lg navbar-light bg-light">
 <div class="container-fluid">
@@ -67,8 +93,6 @@ const crearEmpleado = () => {
     id: idEmpleado,
   };
   idEmpleado++;
-
-  //console.log(calcularSalario(empleado));
 
   calcularSalario(empleado);
 
@@ -126,11 +150,7 @@ const calcularSalario = (empleado) => {
 
 const filtroDeEdades = (edades) => {
   let resultadoFiltroEmpleados;
-  // if (edades === 'mayores') {
-  //     resultadoFiltroEmpleados = empleados.filter((i) => i.edad > 30);
-  // } else {
-  //     resultadoFiltroEmpleados = empleados.filter((i) => i.edad <= 30);
-  // }
+
   edades === "mayores"
     ? (resultadoFiltroEmpleados = empleados.filter((i) => i.edad > 30))
     : (resultadoFiltroEmpleados = empleados.filter((i) => i.edad <= 30));
@@ -149,30 +169,24 @@ btnMay30.addEventListener("click", (e) => {
 });
 
 const mostrarEnTabla = (filtrado) => {
-  //let idAcomulador = 0;
-
   tablaEmpleados.innerHTML = "";
 
   filtrado.forEach((empleado) => {
     const { nombre, apellido, edad, seniority, salario, id } = empleado; //desestructuración
 
     tablaEmpleados.innerHTML += `<tr>
-        <th scope="row">${id}</th>
-        <td>${nombre}</td>
-        <td>${apellido}</td>
-        <td>${edad}</td>
-        <td>${seniority}</td>
-        <td>AR$ ${Math.floor(salario)}</td>
-        <td><button onclick="eliminarEmpleado(${id})" type="click" class="btn btn-primary">Eliminar</button></td>
+        <th class="guionCentrado" scope="row">${id}</th>
+        <td class="guionCentrado">${nombre}</td>
+        <td class="guionCentrado">${apellido}</td>
+        <td class="guionCentrado">${edad}</td>
+        <td class="guionCentrado">${seniority}</td>
+        <td class="guionCentrado">AR$ ${Math.floor(salario)}</td>
+        <td class="guionCentrado">-</td>
+        <td class="guionCentrado"><button onclick="eliminarEmpleado(${id})" type="click" class="btn btn-primary">Eliminar</button></td>
     </tr>
     `;
   });
 };
-
-// console.table(empleados);
-//<th scope="row">${idAcomulador++}</th>
-
-//let intentoDe = JSON.parse(localStorage.getItem("listaEmpleados"));
 
 function eliminarEmpleado(idEmpEliminar) {
   const empleadoFiltrado = empleados.filter(
@@ -185,6 +199,4 @@ function eliminarEmpleado(idEmpEliminar) {
   empleados = empleadoFiltrado;
 
   mostrarEnTabla(empleadoFiltrado);
-
-  console.log(idEmpEliminar);
 }

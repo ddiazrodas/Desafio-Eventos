@@ -1,0 +1,30 @@
+[{
+    "id" : "1",
+    "nombre" : "Federico",
+    "apellido" : "Riesgo",
+    "edad" : "28",
+    "seniority" : "Junior",
+    "mes" : "Junio"
+
+}, {
+    "id" : "2",
+    "nombre" : "Nahuel",
+    "apellido" : "De Fazio",
+    "edad" : "26",
+    "seniority" : "Junior",
+    "mes" : "Mayo"
+},{
+    "id" : "3",
+    "nombre" : "Diego",
+    "apellido" : "Diaz",
+    "edad" : "27",
+    "seniority" : "Junior",
+    "mes" : "Abril"
+},{
+    "id" : "4",
+    "nombre" : "Agustin",
+    "apellido" : "Rodriguez",
+    "edad" : "27",
+    "seniority" : "Senior",
+    "mes" : "Marzo"
+}]
