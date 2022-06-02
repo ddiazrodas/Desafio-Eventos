@@ -50,6 +50,12 @@ const bonos = {
 };
 
 const crearEmpleado = () => {
+  if (seniorityEmp.value === "Seniority") {
+    alert("Seleccione un Seniority");
+    throw new Error("Falta Seniority");
+    return;
+  }
+
   let empleado = {
     nombre: nombEmpleado.value,
     apellido: apellEmpleado.value,
@@ -62,8 +68,44 @@ const crearEmpleado = () => {
   };
   idEmpleado++;
 
+  //console.log(calcularSalario(empleado));
+
+  calcularSalario(empleado);
+
   empleados.push(empleado);
 };
+
+const guardarEmpleados = (clave, valor) => {
+  localStorage.setItem(clave, valor);
+};
+
+formulario.addEventListener("submit", (e, empleado) => {
+  e.preventDefault();
+
+  try {
+    crearEmpleado();
+    guardarEmpleados("listaEmpleados", JSON.stringify(empleados));
+
+    let { nombre, apellido } = empleados.find(
+      (persona) =>
+        persona.nombre.toLowerCase() === nombEmpleado.value.toLowerCase() &&
+        persona.apellido.toLowerCase() === apellEmpleado.value.toLowerCase()
+    );
+
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Datos cargados correctamente",
+      text: `Empleado: ${nombre} ${apellido}`,
+      showConfirmButton: false,
+      timer: 2000,
+    });
+
+    formulario.reset();
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 const calcularSalario = (empleado) => {
   if (empleado.horasTrabajadas > 200) {
@@ -81,33 +123,6 @@ const calcularSalario = (empleado) => {
       (bonos[empleado.seniority] || bonos["default"]);
   }
 };
-
-const guardarEmpleados = (clave, valor) => {
-  localStorage.setItem(clave, valor);
-};
-
-formulario.addEventListener("submit", (e, empleado) => {
-  e.preventDefault();
-  crearEmpleado();
-  guardarEmpleados("listaEmpleados", JSON.stringify(empleados));
-
-  let { nombre, apellido } = empleados.find(
-    (persona) =>
-      persona.nombre.toLowerCase() === nombEmpleado.value.toLowerCase() &&
-      persona.apellido.toLowerCase() === apellEmpleado.value.toLowerCase()
-  );
-
-  Swal.fire({
-    position: "center",
-    icon: "success",
-    title: "Datos cargados correctamente",
-    text: `Empleado: ${nombre} ${apellido}`,
-    showConfirmButton: false,
-    timer: 2000,
-  });
-
-  formulario.reset();
-});
 
 const filtroDeEdades = (edades) => {
   let resultadoFiltroEmpleados;
@@ -141,15 +156,13 @@ const mostrarEnTabla = (filtrado) => {
   filtrado.forEach((empleado) => {
     const { nombre, apellido, edad, seniority, salario, id } = empleado; //desestructuración
 
-    calcularSalario(empleado);
-
     tablaEmpleados.innerHTML += `<tr>
         <th scope="row">${id}</th>
         <td>${nombre}</td>
         <td>${apellido}</td>
         <td>${edad}</td>
         <td>${seniority}</td>
-        <td>AR$ ${salario}</td>
+        <td>AR$ ${Math.floor(salario)}</td>
         <td><button onclick="eliminarEmpleado(${id})" type="click" class="btn btn-primary">Eliminar</button></td>
     </tr>
     `;
@@ -159,18 +172,19 @@ const mostrarEnTabla = (filtrado) => {
 // console.table(empleados);
 //<th scope="row">${idAcomulador++}</th>
 
-let intentoDe = JSON.parse(localStorage.getItem("listaEmpleados"));
+//let intentoDe = JSON.parse(localStorage.getItem("listaEmpleados"));
 
 function eliminarEmpleado(idEmpEliminar) {
-  
-    const empleadoFiltrado = empleados.filter ((empleado) => empleado.id != idEmpEliminar);
-    
-    localStorage.setItem("listaEmpleados", empleadoFiltrado);
-    //localStorage.removeItem("listaEmpleados");
+  const empleadoFiltrado = empleados.filter(
+    (empleado) => empleado.id != idEmpEliminar
+  );
 
-    empleados=empleadoFiltrado;
+  localStorage.setItem("listaEmpleados", JSON.stringify(empleadoFiltrado));
+  //localStorage.removeItem("listaEmpleados");
 
-    mostrarEnTabla(empleadoFiltrado);
+  empleados = empleadoFiltrado;
 
-    console.log(idEmpEliminar);
+  mostrarEnTabla(empleadoFiltrado);
+
+  console.log(idEmpEliminar);
 }
